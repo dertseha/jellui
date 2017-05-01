@@ -97,3 +97,9 @@ func (builder *LabelBuilder) AlignedVerticallyBy(aligner Aligner) *LabelBuilder 
 	builder.verticalAligner = aligner
 	return builder
 }
+
+// WithTextPainter sets the painter for text.
+func (builder *LabelBuilder) WithTextPainter(painter graphics.TextPainter) *LabelBuilder {
+	builder.textPainter = painter
+	return builder
+}

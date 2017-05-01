@@ -45,10 +45,11 @@ type controlsTestApplication struct {
 	mouseX, mouseY float32
 	mouseButtons   uint32
 
-	uiFontPainter  graphics.TextPainter
-	uiTextPalette  *graphics.PaletteTexture
-	rectRenderer   *graphics.RectangleRenderer
-	uiTextRenderer *graphics.BitmapTextureRenderer
+	uiFontPainter    graphics.TextPainter
+	largeFontPainter graphics.TextPainter
+	uiTextPalette    *graphics.PaletteTexture
+	rectRenderer     *graphics.RectangleRenderer
+	uiTextRenderer   *graphics.BitmapTextureRenderer
 
 	rootArea *area.Area
 }
@@ -111,16 +112,33 @@ func (app *controlsTestApplication) setDebugOpenGl() {
 }
 
 func (app *controlsTestApplication) initGraphics() {
-	uiTextPalette := [][4]byte{
-		{0x00, 0x00, 0x00, 0x00},
-		{0x80, 0x94, 0x54, 0xFF},
-		{0x00, 0x00, 0x00, 0xC0}}
+	uiTextPalette := map[int][4]byte{
+		0: {0x00, 0x00, 0x00, 0x00},
+		1: {0x80, 0x94, 0x54, 0xFF},
+		2: {0x00, 0x00, 0x00, 0xC0},
+
+		90: {0x80, 0x54, 0x94, 0xFF},
+		92: {0x70, 0x44, 0x84, 0xFF},
+		94: {0x60, 0x34, 0x74, 0xFF},
+		95: {0x50, 0x24, 0x64, 0xFF},
+		98: {0x40, 0x14, 0x54, 0x20},
+		/*
+			90: {0x80, 0x94, 0x54, 0xFF},
+			92: {0x70, 0x84, 0x44, 0xFF},
+			94: {0x60, 0x74, 0x34, 0xFF},
+			95: {0x50, 0x64, 0x24, 0xFF},
+			98: {0x40, 0x54, 0x14, 0x20},
+		*/
+		/*
+			90: {0x80, 0x94, 0x54, 0xFF},
+			92: {0x7C, 0x90, 0x50, 0xFF},
+			94: {0x78, 0x8C, 0x4C, 0xFF},
+			95: {0x74, 0x88, 0x48, 0xFF},
+			98: {0x70, 0x84, 0x44, 0x20},
+		*/
+	}
 	app.uiTextPalette = app.NewPaletteTexture(func(index int) (byte, byte, byte, byte) {
-		fetchIndex := index
-		if fetchIndex >= len(uiTextPalette) {
-			fetchIndex = 0
-		}
-		entry := uiTextPalette[fetchIndex]
+		entry := uiTextPalette[index]
 		return entry[0], entry[1], entry[2], entry[3]
 	})
 	viewMatrix := mgl.Ident4()
@@ -128,6 +146,7 @@ func (app *controlsTestApplication) initGraphics() {
 	app.uiTextRenderer = graphics.NewBitmapTextureRenderer(uiRenderContext, app.uiTextPalette)
 
 	app.uiFontPainter = graphics.NewBitmapTextPainter(font.SmallShock, 0x02)
+	app.largeFontPainter = graphics.NewBitmapTextPainter(font.ColorHeadingShock, 0x00)
 
 	app.rectRenderer = graphics.NewRectangleRenderer(app.gl, &app.projectionMatrix)
 }
@@ -139,7 +158,7 @@ func (app *controlsTestApplication) initInterface() {
 	rootBuilder.SetBottom(area.NewAbsoluteAnchor(0.0))
 	rootBuilder.OnRender(func(area *area.Area) {
 		app.rectRenderer.Fill(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
-			graphics.RGBA(0.125, 0.25, 0.45, 1.0))
+			/*graphics.RGBA(0.125, 0.25, 0.45, 1.0) */ graphics.RGBA(0.0, 0.0, 0.0, 1.0))
 	})
 
 	app.rootArea = rootBuilder.Build()
@@ -153,7 +172,7 @@ func (app *controlsTestApplication) initInterface() {
 		lastBottom = area.NewOffsetAnchor(lastBottom, 20)
 		labelBuilder.SetBottom(lastBottom)
 		label1 := labelBuilder.Build()
-		label1.SetText("Label Text")
+		label1.SetText("The quick brown fox jumps over the lazy dog 0123456789 :")
 	}
 	{
 		buttonBuilder := app.ForTextButton()
@@ -180,6 +199,18 @@ func (app *controlsTestApplication) initInterface() {
 			fmt.Printf("Selected: %v\n", item)
 		})
 		boxBuilder.Build()
+	}
+	{
+		labelBuilder := app.ForLabel()
+		labelBuilder.SetParent(app.rootArea)
+		labelBuilder.SetRight(app.rootArea.Right())
+		labelBuilder.SetTop(lastBottom)
+		lastBottom = area.NewOffsetAnchor(lastBottom, 20)
+		labelBuilder.SetBottom(lastBottom)
+		labelBuilder.WithTextPainter(app.largeFontPainter)
+		labelBuilder.SetScale(1.0)
+		label1 := labelBuilder.Build()
+		label1.SetText("The quick brown fox jumps over the lazy dog 0123456789 :")
 	}
 }
 
