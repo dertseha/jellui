@@ -9,7 +9,7 @@ import (
 )
 
 var fillRectVertexShaderSource = `
-#version 130
+#version 120
 
 attribute vec2 vertexPosition;
 
@@ -21,7 +21,7 @@ void main(void) {
 `
 
 var fillRectFragmentShaderSource = `
-#version 130
+#version 120
 
 uniform vec4 color;
 

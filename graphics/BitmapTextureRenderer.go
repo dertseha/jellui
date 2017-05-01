@@ -9,7 +9,7 @@ import (
 )
 
 var bitmapTextureVertexShaderSource = `
-#version 130
+#version 120
 
 attribute vec2 vertexPosition;
 attribute vec2 uvPosition;
@@ -28,7 +28,7 @@ void main(void) {
 `
 
 var bitmapTextureFragmentShaderSource = `
-#version 130
+#version 120
 
 uniform sampler2D palette;
 uniform sampler2D bitmap;
