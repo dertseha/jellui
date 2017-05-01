@@ -9,17 +9,16 @@ import (
 )
 
 var bitmapTextureVertexShaderSource = `
-#version 150
-precision mediump float;
+#version 130
 
-in vec2 vertexPosition;
-in vec2 uvPosition;
+attribute vec2 vertexPosition;
+attribute vec2 uvPosition;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-out vec2 uv;
+varying vec2 uv;
 
 void main(void) {
    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 0.0, 1.0);
@@ -29,20 +28,18 @@ void main(void) {
 `
 
 var bitmapTextureFragmentShaderSource = `
-#version 150
-precision mediump float;
+#version 130
 
 uniform sampler2D palette;
 uniform sampler2D bitmap;
 
-in vec2 uv;
-out vec4 fragColor;
+varying vec2 uv;
 
 void main(void) {
    vec4 pixel = texture2D(bitmap, uv);
 
    if (pixel.a > 0.0) {
-      fragColor = texture2D(palette, vec2(pixel.a, 0.5));
+      gl_FragColor = texture2D(palette, vec2(pixel.a, 0.5));
    } else {
       discard;
    }

@@ -9,13 +9,13 @@ import (
 )
 
 // Run initializes the environment to run the given application within.
-func Run(app jellui.Application, deferrer <-chan func()) {
+func Run(app jellui.Application, title string, framesPerSecond float64, deferrer <-chan func()) {
 	runtime.LockOSThread()
 
 	var window *OpenGlWindow
 	{
 		var err error
-		window, err = NewOpenGlWindow()
+		window, err = NewOpenGlWindow(title, framesPerSecond)
 		if err != nil {
 			log.Panicln(err)
 		}

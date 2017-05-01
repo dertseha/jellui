@@ -9,10 +9,9 @@ import (
 )
 
 var fillRectVertexShaderSource = `
-#version 150
-precision mediump float;
+#version 130
 
-in vec2 vertexPosition;
+attribute vec2 vertexPosition;
 
 uniform mat4 projectionMatrix;
 
@@ -22,14 +21,12 @@ void main(void) {
 `
 
 var fillRectFragmentShaderSource = `
-#version 150
-precision mediump float;
+#version 130
 
 uniform vec4 color;
-out vec4 fragColor;
 
 void main(void) {
-	fragColor = color;
+	gl_FragColor = color;
 }
 `
 

@@ -31,7 +31,7 @@ func main() {
 
 	app := newAreaTestApplication()
 
-	native.Run(app, deferrer)
+	native.Run(app, "BasicAreaExample", 30.0, deferrer)
 }
 
 type areaTestApplication struct {

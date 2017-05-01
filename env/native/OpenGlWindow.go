@@ -10,9 +10,6 @@ import (
 	"github.com/dertseha/jellui/opengl"
 )
 
-var framesPerSecond = float64(30.0)
-var frameTime = time.Duration(int64(float64(time.Second) / float64(framesPerSecond)))
-
 var buttonsByIndex = map[glfw.MouseButton]uint32{
 	glfw.MouseButton1: input.MousePrimary,
 	glfw.MouseButton2: input.MouseSecondary}
@@ -26,22 +23,24 @@ type OpenGlWindow struct {
 	glfwWindow *glfw.Window
 	glWrapper  *OpenGl
 
-	nextRenderTick time.Time
+	framesPerSecond float64
+	frameTime       time.Duration
+	nextRenderTick  time.Time
 }
 
 // NewOpenGlWindow tries to initialize the OpenGL environment and returns a
 // new window instance.
-func NewOpenGlWindow() (window *OpenGlWindow, err error) {
+func NewOpenGlWindow(title string, framesPerSecond float64) (window *OpenGlWindow, err error) {
 	if err = glfw.Init(); err == nil {
 		glfw.WindowHint(glfw.Resizable, 1)
 		glfw.WindowHint(glfw.Decorated, 1)
 		glfw.WindowHint(glfw.ClientAPI, glfw.OpenGLAPI)
-		glfw.WindowHint(glfw.ContextVersionMajor, 3)
-		glfw.WindowHint(glfw.ContextVersionMinor, 2)
-		glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
-		glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
+		glfw.WindowHint(glfw.ContextVersionMajor, 2)
+		glfw.WindowHint(glfw.ContextVersionMinor, 1)
+		//glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
+		//glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
 		var glfwWindow *glfw.Window
-		glfwWindow, err = glfw.CreateWindow(1280, 720, "shocked", nil, nil)
+		glfwWindow, err = glfw.CreateWindow(1280, 720, title, nil, nil)
 		if err == nil {
 			glfwWindow.MakeContextCurrent()
 
@@ -49,6 +48,8 @@ func NewOpenGlWindow() (window *OpenGlWindow, err error) {
 				AbstractOpenGlWindow: env.InitAbstractOpenGlWindow(),
 				glfwWindow:           glfwWindow,
 				glWrapper:            NewOpenGl(),
+				framesPerSecond:      framesPerSecond,
+				frameTime:            time.Duration(int64(float64(time.Second) / float64(framesPerSecond))),
 				nextRenderTick:       time.Now()}
 
 			window.keyBuffer = input.NewStickyKeyBuffer(window.StickyKeyListener())
@@ -83,16 +84,16 @@ func (window *OpenGlWindow) Update() {
 	delta := now.Sub(window.nextRenderTick)
 	if delta.Nanoseconds() < 0 {
 		// detected a change of wallclock time into the past; realign
-		delta = frameTime
+		delta = window.frameTime
 		window.nextRenderTick = now
 	}
 
-	if delta.Nanoseconds() >= frameTime.Nanoseconds() {
+	if delta.Nanoseconds() >= window.frameTime.Nanoseconds() {
 		window.glfwWindow.MakeContextCurrent()
 		window.CallRender()
 		window.glfwWindow.SwapBuffers()
-		framesCovered := delta.Nanoseconds() / frameTime.Nanoseconds()
-		window.nextRenderTick = window.nextRenderTick.Add(time.Duration(framesCovered * frameTime.Nanoseconds()))
+		framesCovered := delta.Nanoseconds() / window.frameTime.Nanoseconds()
+		window.nextRenderTick = window.nextRenderTick.Add(time.Duration(framesCovered * window.frameTime.Nanoseconds()))
 	}
 }
 
@@ -104,6 +105,17 @@ func (window *OpenGlWindow) OpenGl() opengl.OpenGl {
 // Size implements the OpenGlWindow interface.
 func (window *OpenGlWindow) Size() (width int, height int) {
 	return window.glfwWindow.GetFramebufferSize()
+}
+
+// SetFullScreen implements the OpenGlWindow interface.
+func (window *OpenGlWindow) SetFullScreen(on bool) {
+	if on {
+		monitor := glfw.GetPrimaryMonitor()
+		videoMode := monitor.GetVideoMode()
+		window.glfwWindow.SetMonitor(monitor, 0, 0, videoMode.Width, videoMode.Height, glfw.DontCare)
+	} else {
+		window.glfwWindow.SetMonitor(nil, 0, 0, 1280, 720, glfw.DontCare)
+	}
 }
 
 func (window *OpenGlWindow) onFramebufferResize(rawWindow *glfw.Window, width int, height int) {

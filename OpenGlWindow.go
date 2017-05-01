@@ -47,6 +47,8 @@ type OpenGlWindow interface {
 	OnResize(callback ResizeCallback)
 	// Size returns the dimensions of the window display area in pixel.
 	Size() (width int, height int)
+	// SetFullScreen sets the full screen state of the window.
+	SetFullScreen(on bool)
 
 	// OnMouseMove registers a callback function for mouse move events.
 	OnMouseMove(callback MouseMoveCallback)

@@ -33,7 +33,7 @@ func main() {
 
 	app := newControlsTestApplication()
 
-	native.Run(app, deferrer)
+	native.Run(app, "ControlsExample", 30.0, deferrer)
 }
 
 type controlsTestApplication struct {
@@ -175,6 +175,8 @@ func (app *controlsTestApplication) initInterface() {
 		label1.SetText("The quick brown fox jumps over the lazy dog 0123456789 :")
 	}
 	{
+		fullScreen := false
+
 		buttonBuilder := app.ForTextButton()
 		buttonBuilder.SetParent(app.rootArea)
 		buttonBuilder.SetRight(app.rootArea.Right())
@@ -183,6 +185,8 @@ func (app *controlsTestApplication) initInterface() {
 		buttonBuilder.SetBottom(lastBottom)
 		buttonBuilder.OnAction(func() {
 			fmt.Printf("Button click!\n")
+			fullScreen = !fullScreen
+			app.glWindow.SetFullScreen(fullScreen)
 		})
 		buttonBuilder.WithText("The Button")
 		buttonBuilder.Build()
