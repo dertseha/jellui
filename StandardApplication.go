@@ -51,6 +51,11 @@ func NewStandardApplication(uiSetup func(*StandardApplication, *area.Area)) *Sta
 			2: {0x00, 0x00, 0x00, 0xC0}}}
 }
 
+// SetCursorVisible controls whether the mouse cursor shall be visible.
+func (app *StandardApplication) SetCursorVisible(visible bool) {
+	app.glWindow.SetCursorVisible(visible)
+}
+
 // SetFullScreen sets the full screen state of the window.
 func (app *StandardApplication) SetFullScreen(on bool) {
 	app.glWindow.SetFullScreen(on)

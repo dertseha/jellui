@@ -50,6 +50,9 @@ type OpenGlWindow interface {
 	// SetFullScreen sets the full screen state of the window.
 	SetFullScreen(on bool)
 
+	// SetCursorVisible controls whether the mouse cursor is currently visible.
+	SetCursorVisible(visible bool)
+
 	// OnMouseMove registers a callback function for mouse move events.
 	OnMouseMove(callback MouseMoveCallback)
 	// OnMouseButtonDown registers a callback function for mouse button down events.

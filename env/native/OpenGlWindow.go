@@ -107,6 +107,15 @@ func (window *OpenGlWindow) Size() (width int, height int) {
 	return window.glfwWindow.GetFramebufferSize()
 }
 
+// SetCursorVisible implements the OpenGlWindow interface
+func (window *OpenGlWindow) SetCursorVisible(visible bool) {
+	if visible {
+		window.glfwWindow.SetInputMode(glfw.CursorMode, glfw.CursorNormal)
+	} else {
+		window.glfwWindow.SetInputMode(glfw.CursorMode, glfw.CursorHidden)
+	}
+}
+
 // SetFullScreen implements the OpenGlWindow interface.
 func (window *OpenGlWindow) SetFullScreen(on bool) {
 	if on {
