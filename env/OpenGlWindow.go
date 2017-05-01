@@ -1,4 +1,4 @@
-package jellui
+package env
 
 import (
 	"github.com/dertseha/jellui/input"

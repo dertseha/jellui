@@ -5,11 +5,11 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/dertseha/jellui"
+	"github.com/dertseha/jellui/env"
 )
 
 // Run initializes the environment to run the given application within.
-func Run(app jellui.Application, title string, framesPerSecond float64, deferrer <-chan func()) {
+func Run(app env.Application, title string, framesPerSecond float64, deferrer <-chan func()) {
 	runtime.LockOSThread()
 
 	var window *OpenGlWindow

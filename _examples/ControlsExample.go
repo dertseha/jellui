@@ -7,10 +7,10 @@ import (
 
 	mgl "github.com/go-gl/mathgl/mgl32"
 
-	"github.com/dertseha/jellui"
 	"github.com/dertseha/jellui/area"
 	"github.com/dertseha/jellui/area/events"
 	"github.com/dertseha/jellui/controls"
+	"github.com/dertseha/jellui/env"
 	"github.com/dertseha/jellui/env/native"
 	"github.com/dertseha/jellui/font"
 	"github.com/dertseha/jellui/graphics"
@@ -37,7 +37,7 @@ func main() {
 }
 
 type controlsTestApplication struct {
-	glWindow jellui.OpenGlWindow
+	glWindow env.OpenGlWindow
 	gl       opengl.OpenGl
 
 	projectionMatrix mgl.Mat4
@@ -58,7 +58,7 @@ func newControlsTestApplication() *controlsTestApplication {
 	return &controlsTestApplication{}
 }
 
-func (app *controlsTestApplication) Init(glWindow jellui.OpenGlWindow) {
+func (app *controlsTestApplication) Init(glWindow env.OpenGlWindow) {
 	app.setWindow(glWindow)
 	app.initOpenGl()
 	app.setDebugOpenGl()
@@ -69,7 +69,7 @@ func (app *controlsTestApplication) Init(glWindow jellui.OpenGlWindow) {
 	app.onWindowResize(glWindow.Size())
 }
 
-func (app *controlsTestApplication) setWindow(glWindow jellui.OpenGlWindow) {
+func (app *controlsTestApplication) setWindow(glWindow env.OpenGlWindow) {
 	app.glWindow = glWindow
 	app.gl = glWindow.OpenGl()
 
@@ -253,11 +253,6 @@ func (app *controlsTestApplication) onMouseButtonUp(mouseButton uint32, modifier
 func (app *controlsTestApplication) onMouseScroll(dx float32, dy float32) {
 	app.rootArea.DispatchPositionalEvent(events.NewMouseScrollEvent(
 		app.mouseX, app.mouseY, 0, app.mouseButtons, dx, dy))
-}
-
-// ForGraphics implements the Context interface.
-func (app *controlsTestApplication) ForGraphics() graphics.Context {
-	return app
 }
 
 // RectangleRenderer implements the graphics.Context interface.

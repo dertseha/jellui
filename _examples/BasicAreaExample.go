@@ -7,9 +7,9 @@ import (
 
 	mgl "github.com/go-gl/mathgl/mgl32"
 
-	"github.com/dertseha/jellui"
 	"github.com/dertseha/jellui/area"
 	"github.com/dertseha/jellui/area/events"
+	"github.com/dertseha/jellui/env"
 	"github.com/dertseha/jellui/env/native"
 	"github.com/dertseha/jellui/graphics"
 	"github.com/dertseha/jellui/input"
@@ -35,7 +35,7 @@ func main() {
 }
 
 type areaTestApplication struct {
-	glWindow jellui.OpenGlWindow
+	glWindow env.OpenGlWindow
 	gl       opengl.OpenGl
 
 	projectionMatrix mgl.Mat4
@@ -51,7 +51,7 @@ func newAreaTestApplication() *areaTestApplication {
 	return &areaTestApplication{}
 }
 
-func (app *areaTestApplication) Init(glWindow jellui.OpenGlWindow) {
+func (app *areaTestApplication) Init(glWindow env.OpenGlWindow) {
 	app.setWindow(glWindow)
 	app.initOpenGl()
 	app.setDebugOpenGl()
@@ -63,7 +63,7 @@ func (app *areaTestApplication) Init(glWindow jellui.OpenGlWindow) {
 	app.onWindowResize(glWindow.Size())
 }
 
-func (app *areaTestApplication) setWindow(glWindow jellui.OpenGlWindow) {
+func (app *areaTestApplication) setWindow(glWindow env.OpenGlWindow) {
 	app.glWindow = glWindow
 	app.gl = glWindow.OpenGl()
 
