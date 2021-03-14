@@ -1,5 +1,7 @@
 # Jellui - A rudimentary OpenGL-based user interface framework, in Go
 
+**This project is archived - there are better UI frameworks available in Go**
+
 This is a simple user interface framework, written in, and for, Go.
 Based on OpenGL, it provides layered areas and event distribution, as well as simple controls (labels, buttons, combo boxes).
 
